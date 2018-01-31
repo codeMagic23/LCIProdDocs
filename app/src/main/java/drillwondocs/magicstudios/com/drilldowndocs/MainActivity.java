@@ -12,6 +12,7 @@ import android.widget.Toast;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import interfaces.NetworkResponse;
 import model.Category;
@@ -21,7 +22,7 @@ public class MainActivity extends AppCompatActivity implements NetworkResponse, 
 
     ListView categoryLV;
 
-    private static ArrayList<Category> categoryList;
+    private static List<Category> categoryList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,11 +30,16 @@ public class MainActivity extends AppCompatActivity implements NetworkResponse, 
         setContentView(R.layout.activity_main);
         categoryLV = findViewById(R.id.catLV);
         categoryLV.setOnItemClickListener(this);
-        Request request = new Request(Request.URL_CATEGORY, this, (NetworkResponse)this);
+        Request request = new Request(Request.URL_CATEGORY, this, this);
+
+        // show message if trouble executing request
+        if (!request.executeRequest()) {
+            Toast.makeText(this, "There was a problem retrieving data. Please try again later", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
-    public void updateList(ArrayList categories) {
+    public void updateList(List categories) {
         categoryList = categories;
 
         ArrayList<String> idNames = new ArrayList<>();

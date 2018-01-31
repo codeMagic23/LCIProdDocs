@@ -9,6 +9,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import interfaces.NetworkResponse;
 import model.Category;
@@ -25,7 +26,13 @@ public class SubcategoryActivity extends AppCompatActivity implements NetworkRes
          subCatLV = findViewById(R.id.subCatLV);
          subCatLV.setOnItemClickListener(this);
 
-        Request request = new Request(Request.URL_SUB_CAT + "&" + Request.PARAM_SUPPORT + "=" + String.valueOf(Category.getSelectedCategory().id), this, (NetworkResponse)this);
+        Request request = new Request(Request.URL_SUB_CAT + "&" + Request.PARAM_SUPPORT + "="
+                + String.valueOf(Category.getSelectedCategory().id), this, this);
+
+        // show message if trouble executing request
+        if (!request.executeRequest()) {
+            Toast.makeText(this, "There was a problem retrieving data. Please try again later", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -34,7 +41,7 @@ public class SubcategoryActivity extends AppCompatActivity implements NetworkRes
     }
 
     @Override
-    public void updateList(ArrayList dataArray) {
+    public void updateList(List dataArray) {
         ArrayList<String> idNames = new ArrayList<>();
         for (int i=0; i<dataArray.size(); i++) {
             Subcategory cat = ((Subcategory)dataArray.get(i));

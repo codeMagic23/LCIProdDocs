@@ -39,34 +39,46 @@ public class Request {
 
     private static final String TAG = Request.class.getSimpleName();
 
-    public NetworkResponse networkResponseDelegate;
+    private NetworkResponse networkResponseDelegate;
+
+    private String url;
+    private RequestQueue queue;
+    ContextWrapper context;
 
     public Request(final String url, final ContextWrapper c, NetworkResponse delegate) {
-        networkResponseDelegate = delegate;
-
+        this.networkResponseDelegate = delegate;
+        this.url = url;
+        this.context = c;
         // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(c);
+        queue = Volley.newRequestQueue(c);
+    }
 
-        // Request a string response from the provided URL.
-        JsonObjectRequest stringRequest = new JsonObjectRequest(url, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        if (url.equals(Request.URL_CATEGORY)) {
-                            createCategories(response);
-                        } else if (url.startsWith(Request.URL_SUB_CAT)) {
-                            createSubcategories(response);
+    public boolean executeRequest() {
+        try {
+            // Request a string response from the provided URL.
+            JsonObjectRequest stringRequest = new JsonObjectRequest(url, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            if (url.equals(Request.URL_CATEGORY)) {
+                                createCategories(response);
+                            } else if (url.startsWith(Request.URL_SUB_CAT)) {
+                                createSubcategories(response);
+                            }
                         }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(c, "Error retrieving data!", Toast.LENGTH_LONG).show();
-                Log.i(TAG, "Error: " + error.getMessage());
-            }
-        });
-        // Add the request to the RequestQueue.
-        queue.add(stringRequest);
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, "Error retrieving data!", Toast.LENGTH_LONG).show();
+                    Log.i(TAG, "Error: " + error.getMessage());
+                }
+            });
+            // Add the request to the RequestQueue.
+            queue.add(stringRequest);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 
     // Create a category from each obj in the array then add them to a list
