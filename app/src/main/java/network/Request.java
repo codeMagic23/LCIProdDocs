@@ -2,6 +2,7 @@ package network;
 
 import android.content.ContextWrapper;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -40,8 +41,7 @@ public class Request {
 
     public NetworkResponse networkResponseDelegate;
 
-    public Request(final String url, ContextWrapper c, NetworkResponse delegate) {
-        Log.i(TAG, "Response iniiiated...");
+    public Request(final String url, final ContextWrapper c, NetworkResponse delegate) {
         networkResponseDelegate = delegate;
 
         // Instantiate the RequestQueue.
@@ -61,11 +61,11 @@ public class Request {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Toast.makeText(c, "Error retrieving data!", Toast.LENGTH_LONG).show();
                 Log.i(TAG, "Error: " + error.getMessage());
             }
         });
-// Add the request to the RequestQueue.
-        Log.i(TAG, "Adding to request queue: " + stringRequest);
+        // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
 
@@ -81,7 +81,6 @@ public class Request {
                 cat.parent = object.getInt("parent");
                 cat.children = object.getBoolean("children");
                 Category.categoryArrayList.add(cat);
-                Log.i(TAG, "Category at i: " + Category.categoryArrayList.get(i).name);
             }
 
             // update listener in activity

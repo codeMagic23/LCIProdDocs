@@ -49,8 +49,6 @@ public class MainActivity extends AppCompatActivity implements NetworkResponse, 
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-        //Category item = (Category)adapterView.getItemAtPosition(position);
-        Toast.makeText(this, "Item Clicked: " + adapterView.getItemAtPosition(position), Toast.LENGTH_SHORT).show();
         Category.selectCategory(categoryList.get(position));
         Intent i = new Intent(this, SubcategoryActivity.class);
         startActivity(i);
