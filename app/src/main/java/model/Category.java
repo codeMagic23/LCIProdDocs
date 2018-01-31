@@ -17,9 +17,6 @@ public class Category {
     public static Category selectedCategory;
 
     public Category() {
-        if (categoryArrayList == null) {
-            categoryArrayList = new ArrayList<>();
-        }
     }
 
     public static void selectCategory(Category cat) {
