@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jinbody on 1/28/2018.
@@ -13,8 +14,8 @@ public class Category {
     public int parent;
     public boolean children = true;
 
-    public static ArrayList<Category> categoryArrayList = new ArrayList<>();
-    public static Category selectedCategory;
+    public static List<Category> categoryArrayList = new ArrayList<>();
+    private static Category selectedCategory;
 
     public Category() {
     }
@@ -25,6 +26,10 @@ public class Category {
 
     public static Category getSelectedCategory() {
         return selectedCategory;
+    }
+
+    public int getID(Category cat) {
+        return cat.id;
     }
 
 

@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements NetworkResponse, 
     @Override
     public void updateList(ArrayList categories) {
         categoryList = categories;
+
         ArrayList<String> idNames = new ArrayList<>();
         for (int i=0; i<categories.size(); i++) {
             Category cat = ((Category)categories.get(i));
