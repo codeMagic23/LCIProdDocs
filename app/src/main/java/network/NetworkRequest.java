@@ -127,7 +127,7 @@ public class NetworkRequest {
             }
             */
             createProdObjects(manuals, ProductDocuments.TYPE_MANUAL, docList);
-            tempList = createProdObjects(components, ProductDocuments.TYPE_COMPONENT, docList);
+            createProdObjects(components, ProductDocuments.TYPE_COMPONENT, docList);
             createProdObjects(assemblies, ProductDocuments.TYPE_ASSEMBLY, docList);
 
             // update listener in activity
@@ -135,8 +135,6 @@ public class NetworkRequest {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        // update listener in activity
-        delegate.onNetworkResponseSuccess(Subcategory.subcategoryList);
     }
 
     // create class member variables from JSONArray param
@@ -148,7 +146,7 @@ public class NetworkRequest {
             try {
                 object = array.getJSONObject(i);
                 prod = new ProductDocuments();
-                prod.migxID = object.getString("migxID");
+                prod.migxID = object.getString("MIGX_id");
                 prod.title = object.getString("title");
                 prod.pdf = object.getString("pdf");
                 prod.image = object.getString("image");
