@@ -14,10 +14,12 @@ public class Category {
     public int parent;
     public boolean children = true;
 
-    public static List<Category> categoryArrayList = new ArrayList<>();
+    //public static List<Category> categoryArrayList = new ArrayList<>();
+    public List<Category> categoryArrayList;
     private static Category selectedCategory;
 
     public Category() {
+        //this.categoryArrayList = new ArrayList<>();
     }
 
     public static void selectCategory(Category cat) {

@@ -14,7 +14,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import interfaces.NetworkResponse;
+import java.util.ArrayList;
+import java.util.List;
+
+import interfaces.NetworkResponseListener;
 import model.Category;
 import model.Subcategory;
 
@@ -39,13 +42,13 @@ public class Request {
 
     private static final String TAG = Request.class.getSimpleName();
 
-    private NetworkResponse networkResponseDelegate;
+    private NetworkResponseListener networkResponseDelegate;
 
     private String url;
     private RequestQueue queue;
-    ContextWrapper context;
+    private ContextWrapper context;
 
-    public Request(final String url, final ContextWrapper c, NetworkResponse delegate) {
+    public Request(final String url, final ContextWrapper c, NetworkResponseListener delegate) {
         this.networkResponseDelegate = delegate;
         this.url = url;
         this.context = c;
@@ -60,11 +63,11 @@ public class Request {
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            if (url.equals(Request.URL_CATEGORY)) {
+                         //   if (url.equals(Request.URL_CATEGORY)) {
                                 createCategories(response);
-                            } else if (url.startsWith(Request.URL_SUB_CAT)) {
-                                createSubcategories(response);
-                            }
+                         //   } else if (url.startsWith(Request.URL_SUB_CAT)) {
+                         //       createSubcategories(response);
+                         //   }
                         }
                     }, new Response.ErrorListener() {
                 @Override
@@ -85,6 +88,8 @@ public class Request {
     private void createCategories(JSONObject obj) {
         try {
             JSONArray results = obj.getJSONArray("results");
+
+            List<Category> catList = new ArrayList<>();
             for (int i=0; i < results.length(); i++) {
                 Category cat = new Category();
                 JSONObject object = results.getJSONObject(i);
@@ -92,16 +97,18 @@ public class Request {
                 cat.name = object.getString("name");
                 cat.parent = object.getInt("parent");
                 cat.children = object.getBoolean("children");
-                Category.categoryArrayList.add(cat);
+                //Category.categoryArrayList.add(cat);
+                catList.add(cat);
             }
 
             // update listener in activity
-            networkResponseDelegate.updateList(Category.categoryArrayList);
+            networkResponseDelegate.onNetworkResponseSuccess(catList);
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
+    /*
     private void createSubcategories(JSONObject obj) {
         try {
             JSONArray results = obj.getJSONArray("results");
@@ -116,11 +123,12 @@ public class Request {
             }
 
             // update listener in activity
-            networkResponseDelegate.updateList(Subcategory.subcategoryList);
+            networkResponseDelegate.onNetworkResponseSuccess(Subcategory.subcategoryList);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         // update listener in activity
-        networkResponseDelegate.updateList(Subcategory.subcategoryList);
+        networkResponseDelegate.onNetworkResponseSuccess(Subcategory.subcategoryList);
     }
+    */
 }

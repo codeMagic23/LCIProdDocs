@@ -11,14 +11,17 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import interfaces.NetworkResponse;
+import interfaces.NetworkResponseListener;
 import model.Category;
 import model.Subcategory;
 import network.Request;
 
-public class SubcategoryActivity extends AppCompatActivity implements NetworkResponse, AdapterView.OnItemClickListener{
+public class SubcategoryActivity extends AppCompatActivity implements NetworkResponseListener, AdapterView.OnItemClickListener{
 
     ListView subCatLV;
+
+    List<Subcategory> subcategoryList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,13 +44,12 @@ public class SubcategoryActivity extends AppCompatActivity implements NetworkRes
     }
 
     @Override
-    public void updateList(List dataArray) {
+    public void onNetworkResponseSuccess(List dataArray) {
+        List<Category> data = dataArray;
         ArrayList<String> idNames = new ArrayList<>();
-        for (int i=0; i<dataArray.size(); i++) {
-            Subcategory cat = ((Subcategory)dataArray.get(i));
-            idNames.add(cat.id + "-" + cat.name);
+        for (Category item : data) {
+            idNames.add(item.id + "-" + item.name);
         }
-
 
         ArrayAdapter catAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, idNames);
         subCatLV.setAdapter(catAdapter);

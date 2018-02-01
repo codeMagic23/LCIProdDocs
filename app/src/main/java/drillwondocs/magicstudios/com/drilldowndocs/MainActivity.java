@@ -14,11 +14,11 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 import java.util.List;
 
-import interfaces.NetworkResponse;
+import interfaces.NetworkResponseListener;
 import model.Category;
 import network.Request;
 
-public class MainActivity extends AppCompatActivity implements NetworkResponse, AdapterView.OnItemClickListener {
+public class MainActivity extends AppCompatActivity implements NetworkResponseListener, AdapterView.OnItemClickListener {
 
     ListView categoryLV;
 
@@ -39,15 +39,13 @@ public class MainActivity extends AppCompatActivity implements NetworkResponse, 
     }
 
     @Override
-    public void updateList(List categories) {
+    public void onNetworkResponseSuccess(List categories) {
         categoryList = categories;
 
-        ArrayList<String> idNames = new ArrayList<>();
-        for (int i=0; i<categories.size(); i++) {
-            Category cat = ((Category)categories.get(i));
+        List<String> idNames = new ArrayList<>();
+        for (Category cat : categoryList) {
             idNames.add(cat.id + "-" + cat.name);
         }
-
 
         ArrayAdapter catAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, idNames);
         categoryLV.setAdapter(catAdapter);
