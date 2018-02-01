@@ -1,5 +1,6 @@
 package drillwondocs.magicstudios.com.drilldowndocs;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,9 +19,11 @@ import network.Request;
 
 public class SubcategoryActivity extends AppCompatActivity implements NetworkResponseListener, AdapterView.OnItemClickListener{
 
+    public static final String SUB_CAT_ID = "subCategoryID";
     ListView subCatLV;
 
     List<Subcategory> subcategoryList;
+    private List<Category> categoryList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +43,15 @@ public class SubcategoryActivity extends AppCompatActivity implements NetworkRes
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-
+        int id = categoryList.get(position).id;
+        Intent i = new Intent(this, ProdDocActivity.class);
+        i.putExtra(SUB_CAT_ID, id);
+        startActivity(i);
     }
 
     @Override
     public void onNetworkResponseSuccess(List dataArray) {
+        categoryList = dataArray;
         List<Category> data = dataArray;
         ArrayList<String> idNames = new ArrayList<>();
         for (Category item : data) {
@@ -57,7 +64,6 @@ public class SubcategoryActivity extends AppCompatActivity implements NetworkRes
 
     @Override
     public void onBackPressed() {
-        Subcategory.subcategoryList.clear();
         super.onBackPressed();
     }
 }

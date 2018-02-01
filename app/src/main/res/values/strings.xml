@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Drilldown Docs</string>
+    <string name="title_activity_prod_doc">ProdDocActivity</string>
 </resources>
