@@ -22,15 +22,14 @@ public class SubcategoryActivity extends AppCompatActivity implements NetworkRes
     public static final String SUB_CAT_ID = "subCategoryID";
     ListView subCatLV;
 
-    List<Subcategory> subcategoryList;
     private List<Category> categoryList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subcategories);
-         subCatLV = findViewById(R.id.subCatLV);
-         subCatLV.setOnItemClickListener(this);
+        subCatLV = findViewById(R.id.subCatLV);
+        subCatLV.setOnItemClickListener(this);
 
         NetworkRequest networkRequest = new NetworkRequest(NetworkRequest.URL_SUB_CAT + "&" + NetworkRequest.PARAM_SUPPORT + "="
                 + String.valueOf(Category.getSelectedCategory().id), this, this);
