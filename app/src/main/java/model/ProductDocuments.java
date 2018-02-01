@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -8,13 +9,31 @@ import java.util.List;
 
 public class ProductDocuments {
 
+    // Lists constructed from JSON response
+    // Can probably 86 and use the documentationList below
     public List manuals;
     public List components;
     public List assemblies;
 
-    // from results array
+    public ArrayList<ProductDocuments> documentationList;
+
+    // from results array - used as page title
     public String name;
     public int parent;
+
+    // manuals, components, and assemblies arrays
+    public String migxID;
+    public String title;
+    public String pdf;  // link to pdf
+    public String image;    // link to image
+
+    public String type;
+
+    // Types of documentation
+    public static final String TYPE_MANUAL = "manual";
+    public static final String TYPE_COMPONENT = "component";
+    public static final String TYPE_ASSEMBLY = "assembly";
+
 
     public ProductDocuments() {}
 }

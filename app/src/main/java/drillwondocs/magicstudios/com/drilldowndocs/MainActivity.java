@@ -28,10 +28,10 @@ public class MainActivity extends AppCompatActivity implements NetworkResponseLi
         setContentView(R.layout.activity_main);
         categoryLV = findViewById(R.id.catLV);
         categoryLV.setOnItemClickListener(this);
-        NetworkRequest networkRequest = new NetworkRequest(NetworkRequest.URL_CATEGORY, this, this);
+        NetworkRequest networkRequest = new NetworkRequest(NetworkRequest.URL_CATEGORY, this);
 
         // show message if trouble executing networkRequest
-        if (!networkRequest.executeRequest()) {
+        if (!networkRequest.executeRequest(this)) {
             Toast.makeText(this, "There was a problem retrieving data. Please try again later", Toast.LENGTH_SHORT).show();
         }
     }

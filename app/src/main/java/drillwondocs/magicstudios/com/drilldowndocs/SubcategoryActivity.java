@@ -32,10 +32,10 @@ public class SubcategoryActivity extends AppCompatActivity implements NetworkRes
         subCatLV.setOnItemClickListener(this);
 
         NetworkRequest networkRequest = new NetworkRequest(NetworkRequest.URL_SUB_CAT + "&" + NetworkRequest.PARAM_SUPPORT + "="
-                + String.valueOf(Category.getSelectedCategory().id), this, this);
+                + String.valueOf(Category.getSelectedCategory().id), this);
 
         // show message if trouble executing networkRequest
-        if (!networkRequest.executeRequest()) {
+        if (!networkRequest.executeRequest(this)) {
             Toast.makeText(this, "There was a problem retrieving data. Please try again later", Toast.LENGTH_SHORT).show();
         }
     }

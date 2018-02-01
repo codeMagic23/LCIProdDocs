@@ -3,6 +3,7 @@ package drillwondocs.magicstudios.com.drilldowndocs;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.util.List;
@@ -25,10 +26,10 @@ public class ProdDocActivity extends AppCompatActivity implements NetworkRespons
 
         if (supportGroup > 0) {
             NetworkRequest networkRequest = new NetworkRequest(NetworkRequest.URL_PROD_DOC + "&" + NetworkRequest.PARAM_SUPPORT + "="
-                    + String.valueOf(supportGroup), this, this);
+                    + String.valueOf(supportGroup), this);
 
             // show message if trouble executing networkRequest
-            if (!networkRequest.executeRequest()) {
+            if (!networkRequest.executeRequest(this)) {
                 Toast.makeText(this, "There was a problem retrieving data. Please try again later", Toast.LENGTH_SHORT).show();
             }
         } else {
@@ -38,6 +39,6 @@ public class ProdDocActivity extends AppCompatActivity implements NetworkRespons
 
     @Override
     public void onNetworkResponseSuccess(List dataArray) {
-
+        Log.i("TAG", "Data at index 0: " + dataArray.get(0));
     }
 }

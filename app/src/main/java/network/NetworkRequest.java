@@ -17,8 +17,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import drillwondocs.magicstudios.com.drilldowndocs.MainActivity;
+import drillwondocs.magicstudios.com.drilldowndocs.ProdDocActivity;
+import drillwondocs.magicstudios.com.drilldowndocs.SubcategoryActivity;
 import interfaces.NetworkResponseListener;
 import model.Category;
+import model.ProductDocuments;
+import model.Subcategory;
 
 /**
  * Created by jinbody on 1/28/2018.
@@ -41,32 +46,30 @@ public class NetworkRequest {
 
     private static final String TAG = NetworkRequest.class.getSimpleName();
 
-    private NetworkResponseListener networkResponseDelegate;
-
     private String url;
     private RequestQueue queue;
     private ContextWrapper context;
 
-    public NetworkRequest(final String url, final ContextWrapper c, NetworkResponseListener delegate) {
-        this.networkResponseDelegate = delegate;
+    public NetworkRequest(final String url, final ContextWrapper c) {
         this.url = url;
         this.context = c;
         // Instantiate the RequestQueue.
         queue = Volley.newRequestQueue(c);
     }
 
-    public boolean executeRequest() {
+    public boolean executeRequest(final NetworkResponseListener delegate) {
         try {
             // NetworkRequest a string response from the provided URL.
             JsonObjectRequest stringRequest = new JsonObjectRequest(url, null,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                         //   if (url.equals(NetworkRequest.URL_CATEGORY)) {
-                                createCategories(response);
-                         //   } else if (url.startsWith(NetworkRequest.URL_SUB_CAT)) {
-                         //       createSubcategories(response);
-                         //   }
+                            // if a parent list, create category list
+                            if (delegate instanceof MainActivity || delegate instanceof SubcategoryActivity) {
+                                createCategories(response, delegate);
+                            } else if (delegate instanceof ProdDocActivity) {
+                                createDocs(response, delegate);
+                            }
                         }
                     }, new Response.ErrorListener() {
                 @Override
@@ -84,7 +87,7 @@ public class NetworkRequest {
     }
 
     // Create a category from each obj in the array then add them to a list
-    private void createCategories(JSONObject obj) {
+    private void createCategories(JSONObject obj, NetworkResponseListener delegate) {
         try {
             JSONArray results = obj.getJSONArray("results");
 
@@ -101,33 +104,62 @@ public class NetworkRequest {
             }
 
             // update listener in activity
-            networkResponseDelegate.onNetworkResponseSuccess(catList);
+            delegate.onNetworkResponseSuccess(catList);
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    /*
-    private void createSubcategories(JSONObject obj) {
+
+    private void createDocs(JSONObject obj, NetworkResponseListener delegate) {
+        //obj.getJSONArray("manuals").getJSONObject(0).get("title")
         try {
-            JSONArray results = obj.getJSONArray("results");
-            for (int i=0; i < results.length(); i++) {
-                Subcategory subCat = new Subcategory();
-                JSONObject object = results.getJSONObject(i);
-                subCat.id = object.getInt("id");
-                subCat.name = object.getString("name");
-                subCat.parent = object.getInt("parent");
-                subCat.children = object.getBoolean("children");
-                Subcategory.subcategoryList.add(subCat);
+            String title = obj.getJSONObject("results").get("name").toString();
+            List<ProductDocuments> docList = new ArrayList<>();
+            JSONArray manuals = obj.getJSONArray("manuals");
+            JSONArray components = obj.getJSONArray("components");
+            JSONArray assemblies = obj.getJSONArray("assemblies");
+            List<ProductDocuments> tempList = new ArrayList();
+            /*
+            tempList = createProdObjects(manuals, ProductDocuments.TYPE_MANUAL);
+            for (ProductDocuments doc : tempList) {
+                docList.add(doc);
             }
+            */
+            createProdObjects(manuals, ProductDocuments.TYPE_MANUAL, docList);
+            tempList = createProdObjects(components, ProductDocuments.TYPE_COMPONENT, docList);
+            createProdObjects(assemblies, ProductDocuments.TYPE_ASSEMBLY, docList);
 
             // update listener in activity
-            networkResponseDelegate.onNetworkResponseSuccess(Subcategory.subcategoryList);
+            delegate.onNetworkResponseSuccess(docList);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         // update listener in activity
-        networkResponseDelegate.onNetworkResponseSuccess(Subcategory.subcategoryList);
+        delegate.onNetworkResponseSuccess(Subcategory.subcategoryList);
     }
-    */
+
+    // create class member variables from JSONArray param
+    private List<ProductDocuments> createProdObjects(JSONArray array, String type, List docList) {
+        ProductDocuments prod = null;
+        List<ProductDocuments> documentList = new ArrayList();
+        for (int i=0; i < array.length(); i++) {
+            JSONObject object = null;
+            try {
+                object = array.getJSONObject(i);
+                prod = new ProductDocuments();
+                prod.migxID = object.getString("migxID");
+                prod.title = object.getString("title");
+                prod.pdf = object.getString("pdf");
+                prod.image = object.getString("image");
+                prod.type = type;
+                docList.add(prod);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            // add to member list
+        }
+        return docList;
+    }
+
 }
