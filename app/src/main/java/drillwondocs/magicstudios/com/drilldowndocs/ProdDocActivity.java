@@ -2,19 +2,13 @@ package drillwondocs.magicstudios.com.drilldowndocs;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.Toast;
 
 import java.util.List;
 
 import interfaces.NetworkResponseListener;
-import model.Category;
-import model.Subcategory;
-import network.Request;
+import network.NetworkRequest;
 
 public class ProdDocActivity extends AppCompatActivity implements NetworkResponseListener{
 
@@ -30,11 +24,11 @@ public class ProdDocActivity extends AppCompatActivity implements NetworkRespons
         }
 
         if (supportGroup > 0) {
-            Request request = new Request(Request.URL_PROD_DOC + "&" + Request.PARAM_SUPPORT + "="
+            NetworkRequest networkRequest = new NetworkRequest(NetworkRequest.URL_PROD_DOC + "&" + NetworkRequest.PARAM_SUPPORT + "="
                     + String.valueOf(supportGroup), this, this);
 
-            // show message if trouble executing request
-            if (!request.executeRequest()) {
+            // show message if trouble executing networkRequest
+            if (!networkRequest.executeRequest()) {
                 Toast.makeText(this, "There was a problem retrieving data. Please try again later", Toast.LENGTH_SHORT).show();
             }
         } else {

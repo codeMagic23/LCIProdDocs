@@ -19,13 +19,12 @@ import java.util.List;
 
 import interfaces.NetworkResponseListener;
 import model.Category;
-import model.Subcategory;
 
 /**
  * Created by jinbody on 1/28/2018.
  */
 
-public class Request {
+public class NetworkRequest {
 
     public static final String URL_CATEGORY = "https://www.lci1.com/mylci-api.json?type=supportGroup&support=&info=&video=&history";
     public static final String URL_SUB_CAT = "https://www.lci1.com/mylci-api.json?type=supportGroup&info=&video=&history";
@@ -40,7 +39,7 @@ public class Request {
     public static final String PARAM_SUPPORT = "support";
 
 
-    private static final String TAG = Request.class.getSimpleName();
+    private static final String TAG = NetworkRequest.class.getSimpleName();
 
     private NetworkResponseListener networkResponseDelegate;
 
@@ -48,7 +47,7 @@ public class Request {
     private RequestQueue queue;
     private ContextWrapper context;
 
-    public Request(final String url, final ContextWrapper c, NetworkResponseListener delegate) {
+    public NetworkRequest(final String url, final ContextWrapper c, NetworkResponseListener delegate) {
         this.networkResponseDelegate = delegate;
         this.url = url;
         this.context = c;
@@ -58,14 +57,14 @@ public class Request {
 
     public boolean executeRequest() {
         try {
-            // Request a string response from the provided URL.
+            // NetworkRequest a string response from the provided URL.
             JsonObjectRequest stringRequest = new JsonObjectRequest(url, null,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                         //   if (url.equals(Request.URL_CATEGORY)) {
+                         //   if (url.equals(NetworkRequest.URL_CATEGORY)) {
                                 createCategories(response);
-                         //   } else if (url.startsWith(Request.URL_SUB_CAT)) {
+                         //   } else if (url.startsWith(NetworkRequest.URL_SUB_CAT)) {
                          //       createSubcategories(response);
                          //   }
                         }

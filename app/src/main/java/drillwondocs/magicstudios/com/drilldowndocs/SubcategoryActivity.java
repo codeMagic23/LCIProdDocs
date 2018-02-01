@@ -15,7 +15,7 @@ import java.util.List;
 import interfaces.NetworkResponseListener;
 import model.Category;
 import model.Subcategory;
-import network.Request;
+import network.NetworkRequest;
 
 public class SubcategoryActivity extends AppCompatActivity implements NetworkResponseListener, AdapterView.OnItemClickListener{
 
@@ -32,11 +32,11 @@ public class SubcategoryActivity extends AppCompatActivity implements NetworkRes
          subCatLV = findViewById(R.id.subCatLV);
          subCatLV.setOnItemClickListener(this);
 
-        Request request = new Request(Request.URL_SUB_CAT + "&" + Request.PARAM_SUPPORT + "="
+        NetworkRequest networkRequest = new NetworkRequest(NetworkRequest.URL_SUB_CAT + "&" + NetworkRequest.PARAM_SUPPORT + "="
                 + String.valueOf(Category.getSelectedCategory().id), this, this);
 
-        // show message if trouble executing request
-        if (!request.executeRequest()) {
+        // show message if trouble executing networkRequest
+        if (!networkRequest.executeRequest()) {
             Toast.makeText(this, "There was a problem retrieving data. Please try again later", Toast.LENGTH_SHORT).show();
         }
     }

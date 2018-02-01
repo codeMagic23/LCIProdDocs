@@ -9,14 +9,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import interfaces.NetworkResponseListener;
 import model.Category;
-import network.Request;
+import network.NetworkRequest;
 
 public class MainActivity extends AppCompatActivity implements NetworkResponseListener, AdapterView.OnItemClickListener {
 
@@ -30,10 +28,10 @@ public class MainActivity extends AppCompatActivity implements NetworkResponseLi
         setContentView(R.layout.activity_main);
         categoryLV = findViewById(R.id.catLV);
         categoryLV.setOnItemClickListener(this);
-        Request request = new Request(Request.URL_CATEGORY, this, this);
+        NetworkRequest networkRequest = new NetworkRequest(NetworkRequest.URL_CATEGORY, this, this);
 
-        // show message if trouble executing request
-        if (!request.executeRequest()) {
+        // show message if trouble executing networkRequest
+        if (!networkRequest.executeRequest()) {
             Toast.makeText(this, "There was a problem retrieving data. Please try again later", Toast.LENGTH_SHORT).show();
         }
     }
