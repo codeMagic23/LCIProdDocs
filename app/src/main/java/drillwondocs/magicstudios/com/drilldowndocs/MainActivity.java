@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity implements NetworkResponseLi
 
     ListView categoryLV;
 
-    private static List<Category> categoryList;
+    private List<Category> categoryList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
