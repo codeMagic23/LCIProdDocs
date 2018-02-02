@@ -1,12 +1,9 @@
 package network;
 
 import android.content.ContextWrapper;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -17,13 +14,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import drillwondocs.magicstudios.com.drilldowndocs.MainActivity;
-import drillwondocs.magicstudios.com.drilldowndocs.ProdDocActivity;
-import drillwondocs.magicstudios.com.drilldowndocs.SubcategoryActivity;
 import interfaces.NetworkResponseListener;
-import model.Category;
 import model.ProductDocuments;
-import model.Subcategory;
 
 /**
  * Created by jinbody on 1/28/2018.
@@ -57,57 +49,16 @@ public class NetworkRequest {
         queue = Volley.newRequestQueue(c);
     }
 
-    public boolean executeRequest(final NetworkResponseListener delegate) {
+    public boolean executeRequest(final Response.Listener delegate) {
         try {
             // NetworkRequest a string response from the provided URL.
-            JsonObjectRequest stringRequest = new JsonObjectRequest(url, null,
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            // if a parent list, create category list
-                            if (delegate instanceof MainActivity || delegate instanceof SubcategoryActivity) {
-                                createCategories(response, delegate);
-                            } else if (delegate instanceof ProdDocActivity) {
-                                createDocs(response, delegate);
-                            }
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(context, "Error retrieving data!", Toast.LENGTH_LONG).show();
-                    Log.i(TAG, "Error: " + error.getMessage());
-                }
-            });
+            JsonObjectRequest stringRequest = new JsonObjectRequest(url, null, delegate, null);
             // Add the request to the RequestQueue.
             queue.add(stringRequest);
         } catch (Exception e) {
             return false;
         }
         return true;
-    }
-
-    // Create a category from each obj in the array then add them to a list
-    private void createCategories(JSONObject obj, NetworkResponseListener delegate) {
-        try {
-            JSONArray results = obj.getJSONArray("results");
-
-            List<Category> catList = new ArrayList<>();
-            for (int i=0; i < results.length(); i++) {
-                Category cat = new Category();
-                JSONObject object = results.getJSONObject(i);
-                cat.id = object.getInt("id");
-                cat.name = object.getString("name");
-                cat.parent = object.getInt("parent");
-                cat.children = object.getBoolean("children");
-                //Category.categoryArrayList.add(cat);
-                catList.add(cat);
-            }
-
-            // update listener in activity
-            delegate.onNetworkResponseSuccess(catList);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 
 

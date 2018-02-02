@@ -18,6 +18,8 @@ public class Category {
     public List<Category> categoryArrayList;
     private static Category selectedCategory;
 
+    public static final String SUB_CAT_ID = "subCategoryID";
+
     public Category() {
         //this.categoryArrayList = new ArrayList<>();
     }
@@ -32,6 +34,10 @@ public class Category {
 
     public int getID(Category cat) {
         return cat.id;
+    }
+
+    public boolean isSubCategory(Category cat) {
+        return cat.parent != 0;
     }
 
 
