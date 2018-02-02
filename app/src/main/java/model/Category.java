@@ -14,15 +14,12 @@ public class Category {
     public int parent;
     public boolean children = true;
 
-    //public static List<Category> categoryArrayList = new ArrayList<>();
-    public List<Category> categoryArrayList;
-    private static Category selectedCategory;
-
     public static final String SUB_CAT_ID = "subCategoryID";
 
-    public Category() {
-        //this.categoryArrayList = new ArrayList<>();
-    }
+    private static Category selectedCategory;
+
+    // empty constructor
+    public Category() {}
 
     public static void selectCategory(Category cat) {
         selectedCategory = cat;
@@ -39,42 +36,4 @@ public class Category {
     public boolean isSubCategory(Category cat) {
         return cat.parent != 0;
     }
-
-
-    /*
-        {
-    "results": [
-        {
-            "name": "Axles, Chassis and Suspension",
-            "id": "417",
-            "parent": "0",
-            "children": true
-        },
-        {
-            "name": "Awnings ",
-            "id": "418",
-            "parent": "0",
-            "children": true
-        }
-    ],
-    "menu": {
-        "parent": "\/support",
-        "name": "Home",
-        "parentName": "Support"
-    },
-    "bottomMenu": {
-        "route": {
-            "capabilities": "\/capabilities",
-            "support": "\/support",
-            "videos": "\/videos",
-            "up": "\/home",
-            "disable": {
-                "capabilities": "",
-                "support": "",
-                "videos":
-        }
-    },
-    "exec": 0.0030560493469238281
-}
-     */
 }

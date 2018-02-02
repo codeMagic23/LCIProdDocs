@@ -3,7 +3,6 @@ package drillwondocs.magicstudios.com.drilldowndocs;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -11,7 +10,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,11 +18,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import interfaces.NetworkResponseListener;
 import model.Category;
 import network.NetworkRequest;
 
-public class MainActivity extends AppCompatActivity implements NetworkResponseListener, AdapterView.OnItemClickListener, Response.Listener {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, Response.Listener {
 
     ListView categoryLV;
 
@@ -51,12 +48,6 @@ public class MainActivity extends AppCompatActivity implements NetworkResponseLi
             Toast.makeText(this, "There was a problem retrieving data. Please try again later", Toast.LENGTH_SHORT).show();
         }
     }
-
-    @Override
-    public void onNetworkResponseSuccess(List categories) {
-        categoryList = categories;
-    }
-
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
