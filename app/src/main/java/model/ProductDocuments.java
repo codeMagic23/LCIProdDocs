@@ -30,9 +30,9 @@ public class ProductDocuments {
     public String type;
 
     // Types of documentation
-    public static final String TYPE_MANUAL = "manual";
-    public static final String TYPE_COMPONENT = "component";
-    public static final String TYPE_ASSEMBLY = "assembly";
+    public static final String TYPE_MANUAL = "manuals";
+    public static final String TYPE_COMPONENT = "components";
+    public static final String TYPE_ASSEMBLY = "assemblies";
 
 
     public ProductDocuments() {}

@@ -17,6 +17,7 @@ import java.util.List;
 
 import interfaces.NetworkResponseListener;
 import model.Category;
+import model.ListParent;
 import model.ProductDocuments;
 import network.NetworkRequest;
 
@@ -24,10 +25,14 @@ public class ProdDocActivity extends AppCompatActivity implements NetworkRespons
 
     private List<ProductDocuments> documentList;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_prod_doc);
+
+        //initialize list for static headings being used in ExpandableListView
+        ListParent.clearAndInitParentList();
 
         Intent i = getIntent();
         int supportGroup = 0;
@@ -68,12 +73,7 @@ public class ProdDocActivity extends AppCompatActivity implements NetworkRespons
             JSONArray components = obj.getJSONArray("components");
             JSONArray assemblies = obj.getJSONArray("assemblies");
             List<ProductDocuments> tempList = new ArrayList();
-            /*
-            tempList = createProdObjects(manuals, ProductDocuments.TYPE_MANUAL);
-            for (ProductDocuments doc : tempList) {
-                docList.add(doc);
-            }
-            */
+
             createProdObjects(manuals, ProductDocuments.TYPE_MANUAL, docList);
             createProdObjects(components, ProductDocuments.TYPE_COMPONENT, docList);
             createProdObjects(assemblies, ProductDocuments.TYPE_ASSEMBLY, docList);
@@ -89,6 +89,7 @@ public class ProdDocActivity extends AppCompatActivity implements NetworkRespons
     // create class member variables from JSONArray param
     private List<ProductDocuments> createProdObjects(JSONArray array, String type, List docList) {
         ProductDocuments prod = null;
+        ListParent parent = new ListParent(type);
         List<ProductDocuments> documentList = new ArrayList();
         for (int i=0; i < array.length(); i++) {
             JSONObject object = null;
@@ -101,6 +102,7 @@ public class ProdDocActivity extends AppCompatActivity implements NetworkRespons
                 prod.image = object.getString("image");
                 prod.type = type;
                 docList.add(prod);
+                parent.getChildItemList().add(prod);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
