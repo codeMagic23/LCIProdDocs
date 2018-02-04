@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     ListView categoryLV;
 
-    private List<Category> categoryList;
+    private List<Category> categoryList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         categoryLV.setOnItemClickListener(this);
         Intent receiveIntent = getIntent();
         String requestURL = NetworkRequest.URL_CATEGORY;
-        if (receiveIntent != null && receiveIntent.getExtras() != null) {
+        if (receiveIntent != null && receiveIntent.getExtras() != null && Category.getSelectedCategory() != null) {
             if (!receiveIntent.getBooleanExtra("isChild", false)) {
                 requestURL = NetworkRequest.URL_SUB_CAT + "&" + NetworkRequest.PARAM_SUPPORT + "="
                         + String.valueOf(Category.getSelectedCategory().id);
@@ -76,14 +76,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         try {
             JSONArray results = obj.getJSONArray("results");
 
-            for (int i = 0; i < results.length(); i++) {
-                Category cat = new Category();
-                JSONObject object = results.getJSONObject(i);
-                cat.id = object.getInt("id");
-                cat.name = object.getString("name");
-                cat.parent = object.getInt("parent");
-                cat.children = object.getBoolean("children");
-                catList.add(cat);
+            if (results.length() > 0) {
+                for (int i = 0; i < results.length(); i++) {
+                    Category cat = new Category();
+                    JSONObject object = results.getJSONObject(i);
+                    cat.id = object.getInt("id");
+                    cat.name = object.getString("name");
+                    cat.parent = object.getInt("parent");
+                    cat.children = object.getBoolean("children");
+                    catList.add(cat);
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -99,5 +101,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         ArrayAdapter catAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, idNames);
         categoryLV.setAdapter(catAdapter);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Category.getSelectedCategory();
+        super.onBackPressed();
     }
 }
