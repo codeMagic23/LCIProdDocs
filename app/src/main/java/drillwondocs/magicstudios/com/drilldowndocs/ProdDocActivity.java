@@ -2,14 +2,10 @@ package drillwondocs.magicstudios.com.drilldowndocs;
 
 import android.app.ExpandableListActivity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.ExpandableListAdapter;
-import android.widget.ExpandableListView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -18,14 +14,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 import adapters.DocsAdapter;
 import interfaces.NetworkResponseListener;
 import model.Category;
-import model.ListParent;
 import model.ProductDocuments;
 import network.NetworkRequest;
 
@@ -66,9 +60,6 @@ public class ProdDocActivity extends ExpandableListActivity implements NetworkRe
     @Override
     public void onResponse(Object response) {
         List<ProductDocuments> prodList = createDocs((JSONObject)response);
-
-        //initialize list for static headings being used in ExpandableListView
-        ListParent.clearAndInitParentList();
 
         getExpandableListView().setAdapter(new DocsAdapter(this, prodList, this.getExpandableListView()));
     }
