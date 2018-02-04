@@ -29,10 +29,6 @@ public class Category {
         return selectedCategory;
     }
 
-    public int getID(Category cat) {
-        return cat.id;
-    }
-
     public boolean isSubCategory(Category cat) {
         return cat.parent != 0;
     }

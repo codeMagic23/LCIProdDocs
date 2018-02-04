@@ -1,9 +1,15 @@
 package drillwondocs.magicstudios.com.drilldowndocs;
 
+import android.app.ExpandableListActivity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.webkit.WebView;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -12,27 +18,26 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
+import adapters.DocsAdapter;
 import interfaces.NetworkResponseListener;
 import model.Category;
 import model.ListParent;
 import model.ProductDocuments;
 import network.NetworkRequest;
 
-public class ProdDocActivity extends AppCompatActivity implements NetworkResponseListener, Response.Listener{
+public class ProdDocActivity extends ExpandableListActivity implements NetworkResponseListener, Response.Listener, View.OnClickListener{
 
     private List<ProductDocuments> documentList;
-
+    private ExpandableListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_prod_doc);
-
-        //initialize list for static headings being used in ExpandableListView
-        ListParent.clearAndInitParentList();
 
         Intent i = getIntent();
         int supportGroup = 0;
@@ -60,25 +65,25 @@ public class ProdDocActivity extends AppCompatActivity implements NetworkRespons
 
     @Override
     public void onResponse(Object response) {
-        documentList = createDocs((JSONObject)response);
-        //updateList(documentList);
+        List<ProductDocuments> prodList = createDocs((JSONObject)response);
+
+        //initialize list for static headings being used in ExpandableListView
+        ListParent.clearAndInitParentList();
+
+        getExpandableListView().setAdapter(new DocsAdapter(this, prodList, this.getExpandableListView()));
     }
 
     private List<ProductDocuments> createDocs(JSONObject obj) {
         List<ProductDocuments> docList = new ArrayList<>();
         try {
-            String title = obj.getJSONObject("results").get("name").toString();
-
             JSONArray manuals = obj.getJSONArray("manuals");
             JSONArray components = obj.getJSONArray("components");
             JSONArray assemblies = obj.getJSONArray("assemblies");
             List<ProductDocuments> tempList = new ArrayList();
-
             createProdObjects(manuals, ProductDocuments.TYPE_MANUAL, docList);
             createProdObjects(components, ProductDocuments.TYPE_COMPONENT, docList);
             createProdObjects(assemblies, ProductDocuments.TYPE_ASSEMBLY, docList);
 
-            // update listener in activity
             return docList;
         } catch (JSONException e) {
             e.printStackTrace();
@@ -87,27 +92,34 @@ public class ProdDocActivity extends AppCompatActivity implements NetworkRespons
     }
 
     // create class member variables from JSONArray param
-    private List<ProductDocuments> createProdObjects(JSONArray array, String type, List docList) {
-        ProductDocuments prod = null;
-        ListParent parent = new ListParent(type);
-        List<ProductDocuments> documentList = new ArrayList();
+    private ProductDocuments createProdObjects(JSONArray array, String type, List docList) {
+        ProductDocuments prod = new ProductDocuments();
+        prod.type = type;
         for (int i=0; i < array.length(); i++) {
             JSONObject object = null;
             try {
                 object = array.getJSONObject(i);
-                prod = new ProductDocuments();
-                prod.migxID = object.getString("MIGX_id");
-                prod.title = object.getString("title");
-                prod.pdf = object.getString("pdf");
-                prod.image = object.getString("image");
-                prod.type = type;
-                docList.add(prod);
-                parent.getChildItemList().add(prod);
+
+                ProductDocuments.ChildItem child = prod.new ChildItem();
+                child.migxID = object.getString("MIGX_id");
+                child.title = object.getString("title");
+                child.pdf = object.getString("pdf");
+                child.image = object.getString("image");
+                prod.children.add(child);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
             // add to member list
         }
-        return docList;
+        docList.add(prod);
+        return prod;
+    }
+
+    @Override
+    public void onClick(View view) {
+        String url = "http://docs.google.com/gview?embedded=true&url=" + (String)view.getTag();
+        Intent i = new Intent(this, PdfViewer.class);
+        i.putExtra("url", url);
+        startActivity(i);
     }
 }
